@@ -58,6 +58,7 @@
             <ul id="nav-mobile" class="left">
               <li id="menu-page-one"><a href="#">Page 1</a></li>
               <li id="menu-page-two"><a href="#">Page 2</a></li>
+              <li id="menu-page-three"><a href="#">Page 3</a></li>
             </ul>
           </div>
         </nav>
@@ -89,7 +90,7 @@
     <div id="page-two">
       <div class="row">
         <div class="col s12 m6">
-          <h4>Page 2</h4>
+          <h4>Page 3</h4>
           <p>Click the button to get suggestions for public API's with no authentication.</p>
           <p>Follow the link to see the API documentation. Remark: every API has one or more "endpoints" - this is
             basically a root url to access the API. Then most API's have additional "query values", which is used to specify further parameters. 
@@ -112,6 +113,28 @@
       </div>
       <div id="api-component-page-two">
       </div>
+     </div>
+   
+     <div id="page-three">
+      <div class="row">
+        <div class="col s12 m6">
+          <h4>page 2</h4>
+          <p>Go to page 2 and find an API of your liking. Then begin coding a complete web-app to suit your needs.</p>
+          <p>Below this text, you can see an example of how to pull API data into your app. The page basically uses
+            three techonologies to make this happen:</p>
+          <ol>
+            <li><a href="https://api.jquery.com/">jQuery</a> - to make asynchronous API calls and manipulate DOM
+              elements.</li>
+            <li><a href="https://handlebarsjs.com/">Handlebars.js</a> - to make HTML templates and insert well-formatted
+              JSON.</li>
+            <li><a href="https://materializecss.com/">Materialize.css</a> - to make the page look great.</li>
+          </ol>
+          <hr />
+          <h5>Example card from the Bored api</h5>
+        </div>
+      </div>
+      <div id="api-component-page-three">
+      </div>
     </div>
 
   </div>
@@ -128,8 +151,8 @@
         <div class="col s12 m6">
           <div class="card blue-grey darken-1">
             <div class="card-content white-text">
-              <span class="card-title">{{type}}</span>
-              <p>{{activity}}</p>
+              <span class="card-title">jokes</span>
+              <p>{{value.joke}}</p>
             </div>
             <div class="card-action">
               <a href="#">This is a link</a>
@@ -163,6 +186,22 @@
     </div>
 </script>
 
+<script id="api-card-template-three" type="text/x-handlebars-template">
+  <div class="row">
+      <div class="col s12 m6">
+        <div class="card blue-grey darken-1">
+          <div class="card-content white-text">
+            <span class="card-title">jokes</span>
+            <p>{{value.joke}}</p>
+          </div>
+          <div class="card-action">
+            <a href="#">This is a link</a>
+          </div>
+        </div>
+    </div>
+  </div>
+</script>
+
   <!-- Page functionality - Javascripts
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <script>
@@ -174,10 +213,14 @@
     var apiSourceTwo = $("#api-card-template-two").html();
     var apiTemplateTwo = Handlebars.compile(apiSourceTwo);
 
+       // Setup handlebars for thrid API card
+       var apiSourceThree= $("#api-card-template-three").html();
+      var apiTemplateThree = Handlebars.compile(apiSourceThree);
+
     //Functions to actually get JSON data from external API's. When .done is called, you receive the data
-    function getApiData(someparam) {
+    function getApiData() {
       $.ajax({
-        url: "https://www.boredapi.com/api/activity?participants=" + someparam,
+        url: "http://api.icndb.com/jokes/random?firstName=John&amp;lastName=Doe"  ,
       }).done(function (data) {
         console.log(data);
         $('#api-component-page-one').html(apiTemplate(data));
@@ -193,6 +236,16 @@
       });
     }
 
+        //Functions to actually get JSON data from external API's. When .done is called, you receive the data
+        function getApiData() {
+      $.ajax({
+        url: "http://api.icndb.com/jokes/random?firstName=John&amp;lastName=Doe"  ,
+      }).done(function (data) {
+        console.log(data);
+        $('#api-component-page-three').html(apiTemplate(data));
+      });
+    }
+
     //Handle menu - first show page one no matter what
     getApiData(1)
     $('#page-two').hide();
@@ -203,10 +256,18 @@
       getApiData(1)
       $('#page-one').show();
       $('#page-two').hide();
+      $('#page-three').hide();
     });
     //When someone clicks the page two navigation link
     $('#menu-page-two').click(function () {
       $('#page-one').hide();
+      $('#page-two').show();
+      $('#page-two').hide();
+    });
+    $('#menu-page-three').click(function () {
+      getApiData(1)
+      $('#page-one').hide();
+      $('#page-two').hide();
       $('#page-two').show();
     });
   </script>
